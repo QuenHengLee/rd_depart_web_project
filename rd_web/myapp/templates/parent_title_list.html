@@ -6,6 +6,11 @@
 </head>
 
 <body>
+    {% if user.is_authenticated %}
+    <p>Hello, {{ user.username }}! <a href="{% url 'logout' %}">Logout</a></p>
+    {% else %}
+    <p>You are not logged in. <a href="{% url 'login' %}">Login</a></p>
+    {% endif %}
     <h1>Parent Titles</h1>
     <nav>
         <ul>

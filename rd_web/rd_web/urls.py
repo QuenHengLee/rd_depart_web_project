@@ -17,6 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    # DB管理介面
     path('admin/', admin.site.urls),
+    # 登入和登出的 URL：
+    path('accounts/', include('django.contrib.auth.urls')),  
+    # 列表清單
     path('', include('myapp.urls')),
 ]
