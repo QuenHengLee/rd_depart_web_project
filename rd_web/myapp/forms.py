@@ -1,16 +1,22 @@
 from django import forms
-from .models import UploadFileList, ChildTitle
+from .models import UploadFileList
 
 class UploadFileForm(forms.ModelForm):
     class Meta:
         model = UploadFileList
-        fields = ['file_name', 'file_description']
+        fields = ['file_name', 'url', 'file_description', 'key']
+        widgets = {
+            'file_name': forms.ClearableFileInput(attrs={'required': False}),
+            'url': forms.URLInput(attrs={'required': False}),
+        }
 
-    def clean_file_name(self):
-        file = self.cleaned_data.get('file_name')
-        if file:
-            if not file.name.endswith('.pdf'):
-                raise forms.ValidationError('只允許上傳 PDF 檔案。')
-            if file.size > 20 * 1024 * 1024:  # 檔案大小限制為 5MB
-                raise forms.ValidationError('檔案大小不能超過 5MB。')
-        return file
+    def clean(self):
+        cleaned_data = super().clean()
+        file_name = cleaned_data.get('file_name')
+        url = cleaned_data.get('url')
+
+        if file_name and url:
+            raise forms.ValidationError('只能選擇上傳檔案或提供網址，不能同時選擇。')
+        if not file_name and not url:
+            raise forms.ValidationError('請選擇上傳檔案或提供網址。')
+        return cleaned_data

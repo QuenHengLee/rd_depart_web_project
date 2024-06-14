@@ -28,3 +28,22 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+function toggleUploadOption(radio, childId) {
+    var fileUpload = document.getElementById("file-upload-" + childId);
+    var urlUpload = document.getElementById("url-upload-" + childId);
+    var fileInput = document.getElementById("id_file_name");
+    var urlInput = document.getElementById("id_url");
+
+    if (radio.value === "file") {
+        fileUpload.style.display = "block";
+        fileInput.required = true;
+        urlUpload.style.display = "none";
+        urlInput.required = false;
+    } else {
+        fileUpload.style.display = "none";
+        fileInput.required = false;
+        urlUpload.style.display = "block";
+        urlInput.required = true;
+    }
+}

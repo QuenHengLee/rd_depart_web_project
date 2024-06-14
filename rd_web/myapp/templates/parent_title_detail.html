@@ -20,9 +20,8 @@
                 <li class="nav-item"><a href="{% url 'login' %}">Login</a></li>
                 {% endif %}
                 {% for pt in parent_titles %}
-                <li class="nav-item">
-                    <a href="{% url 'parent_title_detail' pt.id %}">{{ forloop.counter }}. {{ pt.title }}</a>
-                </li>
+                <li class="nav-item"><a href="{% url 'parent_title_detail' pt.id %}">
+                        {{ forloop.counter }}. {{ pt.title }}</a></li>
                 {% endfor %}
             </ul>
         </nav>
@@ -40,12 +39,12 @@
                         {% for child_title in sub_title.childtitle_set.all %}
                         <li class="child-title">
                             {{ parent_title.id }}.{{ sub_title.id }}.{{ child_title.id }} {{ child_title.title }}
-                            <button class="open-modal" data-child-id="{{ child_title.id }}">新增檔案</button>
+                            <button class="open-modal" data-child-id="{{ child_title.id }}">新增檔案或網址</button>
                             <!-- 上傳檔案的表單對話框 -->
                             <div id="modal-{{ child_title.id }}" class="modal">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h2>上傳檔案</h2>
+                                        <h2>上傳檔案或提供網址</h2>
                                         <span class="close" data-child-id="{{ child_title.id }}">&times;</span>
                                     </div>
                                     <div class="modal-body">
@@ -54,10 +53,29 @@
                                             {% csrf_token %}
                                             <input type="hidden" name="child_id" value="{{ child_title.id }}">
                                             <div class="form-group">
+                                                <label>
+                                                    <input type="radio" name="upload_option_{{ child_title.id }}"
+                                                        value="file" checked
+                                                        onclick="toggleUploadOption(this, '{{ child_title.id }}')"> 上傳檔案
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="upload_option_{{ child_title.id }}"
+                                                        value="url"
+                                                        onclick="toggleUploadOption(this, '{{ child_title.id }}')"> 提供網址
+                                                </label>
+                                            </div>
+                                            <div id="file-upload-{{ child_title.id }}" class="form-group">
                                                 {{ form.file_name.label_tag }} {{ form.file_name }}
+                                            </div>
+                                            <div id="url-upload-{{ child_title.id }}" class="form-group"
+                                                style="display:none;">
+                                                {{ form.url.label_tag }} {{ form.url }}
                                             </div>
                                             <div class="form-group">
                                                 {{ form.file_description.label_tag }} {{ form.file_description }}
+                                            </div>
+                                            <div class="form-group">
+                                                {{ form.key.label_tag }} {{ form.key }}
                                             </div>
                                             <!-- 顯示表單錯誤信息 -->
                                             {% if form.non_field_errors %}
@@ -65,6 +83,12 @@
                                             {% endif %}
                                             {% if form.file_name.errors %}
                                             <div class="error">{{ form.file_name.errors }}</div>
+                                            {% endif %}
+                                            {% if form.url.errors %}
+                                            <div class="error">{{ form.url.errors }}</div>
+                                            {% endif %}
+                                            {% if form.key.errors %}
+                                            <div class="error">{{ form.key.errors }}</div>
                                             {% endif %}
                                             <div class="modal-footer">
                                                 <button type="submit">Upload</button>
@@ -77,8 +101,13 @@
                             <ul class="file-list">
                                 {% for file in child_title.uploadfilelist_set.all %}
                                 <li>
+                                    [佐證編號: {{ file.key }}]
+                                    {% if file.file_name %}
                                     <a href="{{ file.file_name.url }}" target="_blank">{{ file.file_description }}</a>
-                                    <span>上傳單位: {{ file.uploaded_by.username }}</span>
+                                    {% else %}
+                                    <a href="{{ file.url }}" target="_blank">{{ file.file_description }}</a>
+                                    {% endif %}
+                                    <span>上傳人員: {{ file.uploaded_by.username }}</span>
                                 </li>
                                 {% endfor %}
                             </ul>
