@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ parent_title.title }}</title>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            {% for pt in parent_titles %}
+            <li><a href="{% url 'parent_title_detail' pt.id %}">{{ forloop.counter }}. {{ pt.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+    <h1>{{ forloop.parentloop.counter }}. {{ parent_title.title }}</h1>
+    <p>{{ parent_title.description }}</p>
+    <ul>
+        {% for sub_title in parent_title.subtitle_set.all %}
+        <li>
+            <strong>{{ forloop.parentloop.counter }}.{{ forloop.counter }} {{ sub_title.title }}</strong> (Sub No: {{
+            sub_title.sub_no }})
+            <ul>
+                {% for child_title in sub_title.childtitle_set.all %}
+                <li>{{ forloop.parentloop.parentloop.counter }}.{{ forloop.parentloop.counter }}.{{ forloop.counter }}
+                    {{ child_title.title }} (Child No: {{ child_title.child_no }})</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Parent Titles</title>
+</head>
+
+<body>
+    <h1>Parent Titles</h1>
+    <nav>
+        <ul>
+            {% for parent_title in parent_titles %}
+            <li><a href="{% url 'parent_title_detail' parent_title.id %}">{{ parent_title.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+# Python
+*.py[cod]
+__pycache__/
+*.so
+
+# Virtualenv
+venv/
+env/
+myenv/
+
+# Django
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+
+# Ignore the following file types and directories
+*.sqlite3
+*.pyc
+__pycache__/
+media/
+staticfiles/
+local_settings.py
+
+# Node
+node_modules/
+
+# Environment variables file
+.env
