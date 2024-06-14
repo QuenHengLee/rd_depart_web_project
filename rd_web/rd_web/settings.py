@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -130,4 +131,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # 配置登入和登出重定向
 LOGIN_REDIRECT_URL = '/parent_titles/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+
+# 配置檔案上傳設定
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
