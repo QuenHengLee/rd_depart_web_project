@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ parent_title.title }}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1">
 </head>
 
 <body>
@@ -32,11 +31,11 @@
             <h1>{{ parent_title.id }}. {{ parent_title.title }}</h1>
             <p>{{ parent_title.description }}</p>
             <ul class="parent-list">
-                {% for sub_title in parent_title.subtitle_set.all %}
+                {% for sub_title in parent_title.subtitles.all %}
                 <li class="sub-title">
                     <strong>{{ parent_title.id }}.{{ forloop.counter }} {{ sub_title.title }}</strong>
                     <ul class="child-list">
-                        {% for child_title in sub_title.childtitle_set.all %}
+                        {% for child_title in sub_title.childtitles.all %}
                         <li class="child-title">
                             {{ parent_title.id }}.{{ sub_title.id }}.{{ child_title.id }} {{ child_title.title }}
                             <button class="open-modal" data-child-id="{{ child_title.id }}">新增檔案或網址</button>
@@ -94,12 +93,13 @@
                                                 <button type="submit">Upload</button>
                                             </div>
                                         </form>
+
                                     </div>
                                 </div>
                             </div>
                             <!-- 顯示上傳的檔案 -->
                             <ul class="file-list">
-                                {% for file in child_title.uploadfilelist_set.all %}
+                                {% for file in child_title.uploadfiles.all %}
                                 <li>
                                     [佐證編號: {{ file.key }}]
                                     {% if file.file_name %}
@@ -108,6 +108,11 @@
                                     <a href="{{ file.url }}" target="_blank">{{ file.file_description }}</a>
                                     {% endif %}
                                     <span>上傳人員: {{ file.uploaded_by.username }}</span>
+                                    <form method="post" action="{% url 'delete_upload_file' file.id %}"
+                                        style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="red-button">刪除</button>
+                                    </form>
                                 </li>
                                 {% endfor %}
                             </ul>

@@ -19,7 +19,8 @@ def parent_title_detail(request, parent_id):
         if form.is_valid() and child_id:
             upload = form.save(commit=False)
             upload.uploaded_by = request.user
-            upload.child_id = get_object_or_404(ChildTitle, id=child_id)
+            # 設置 child_id 為 ChildTitle 的 ID
+            upload.child = get_object_or_404(ChildTitle, id=child_id)  # 這裡設置的是 child，而不是 child_id
             upload.save()
             return redirect('parent_title_detail', parent_id=parent_id)
 
@@ -28,6 +29,16 @@ def parent_title_detail(request, parent_id):
         'parent_titles': parent_titles,
         'form': form
     })
+
+@login_required
+def delete_upload_file(request, file_id):
+    file = get_object_or_404(UploadFileList, id=file_id)
+    
+    # 更新此處以引用正確的外鍵屬性
+    parent_id = file.child.sub_title.parent_title.id
+    file.delete()
+    
+    return redirect('parent_title_detail', parent_id=parent_id)
 
 @login_required
 def parent_title_list(request):
