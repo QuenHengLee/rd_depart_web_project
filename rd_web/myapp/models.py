@@ -1,6 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
+class CustomUser(AbstractUser):
+    account_type = models.CharField(max_length=50, blank=True, null=True)  # 新增帳號類別欄位
+    
 class ParentTitle(models.Model):
     id = models.AutoField(primary_key=True)
     parent_no = models.IntegerField(unique=True)
@@ -45,8 +49,9 @@ class UploadFileList(models.Model):
     file_name = models.FileField(upload_to='uploads/', blank=True, null=True)
     url = models.URLField(blank=True, null=True)
     file_description = models.TextField()
-    child = models.ForeignKey(ChildTitle, on_delete=models.CASCADE, related_name='uploadfiles')
-    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    child = models.ForeignKey('ChildTitle', on_delete=models.CASCADE, related_name='uploadfiles')
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.file_name.name if self.file_name else self.url
+

@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['140.115.87.169', '127.0.0.1', 'localhost']
 
+# 自定義用戶模型
+AUTH_USER_MODEL = 'myapp.CustomUser'
 
 # Application definition
 
@@ -136,4 +138,5 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 # 配置檔案上傳設定
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
