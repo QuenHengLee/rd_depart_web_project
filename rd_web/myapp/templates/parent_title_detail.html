@@ -107,7 +107,7 @@
                                     {% else %}
                                     <a href="{{ file.url }}" target="_blank">{{ file.file_description }}</a>
                                     {% endif %}
-                                    <span>上傳人員: {{ file.uploaded_by.username }}</span>
+                                    <span>上傳人員: {{ file.uploaded_by.first_name }}</span>
                                     {% if file.uploaded_by == user %}
                                     <form method="post" action="{% url 'delete_upload_file' file.id %}"
                                         style="display:inline;">
