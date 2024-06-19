@@ -36,7 +36,7 @@ def delete_upload_file(request, file_id):
     file = get_object_or_404(UploadFileList, id=file_id)
     
     # 檢查當前用戶是否是文件的上傳者
-    if file.uploaded_by != request.user:
+    if file.uploaded_by != request.user and request.user.account_type != 'Admin':
         return HttpResponseForbidden("您沒有權限刪除此文件。")
     
     parent_id = file.child.sub_title.parent_title.id
