@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from .models import ParentTitle, UploadFileList,ChildTitle
 from .forms import UploadFileForm
 
@@ -34,7 +35,10 @@ def parent_title_detail(request, parent_id):
 def delete_upload_file(request, file_id):
     file = get_object_or_404(UploadFileList, id=file_id)
     
-    # 更新此處以引用正確的外鍵屬性
+    # 檢查當前用戶是否是文件的上傳者
+    if file.uploaded_by != request.user:
+        return HttpResponseForbidden("您沒有權限刪除此文件。")
+    
     parent_id = file.child.sub_title.parent_title.id
     file.delete()
     
