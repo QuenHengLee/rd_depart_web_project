@@ -38,6 +38,7 @@
                         {% for child_title in sub_title.childtitles.all %}
                         <li class="child-title">
                             {{ parent_title.id }}.{{ sub_title.id }}.{{ child_title.id }} {{ child_title.title }}
+                            <!-- 根據用戶類型顯示新增按鈕 -->
                             {% if user.account_type != 'Evaluation' %}
                             <button class="open-modal" data-child-id="{{ child_title.id }}">新增檔案或網址</button>
                             {% endif %}
@@ -95,7 +96,6 @@
                                                 <button type="submit">Upload</button>
                                             </div>
                                         </form>
-
                                     </div>
                                 </div>
                             </div>
@@ -110,6 +110,7 @@
                                     <a href="{{ file.url }}" target="_blank">{{ file.file_description }}</a>
                                     {% endif %}
                                     <span>上傳人員: {{ file.uploaded_by.first_name }}</span>
+                                    <!-- 根據用戶類型顯示刪除按鈕 -->
                                     {% if user.account_type == 'General' %}
                                     {% if file.uploaded_by == user %}
                                     <form method="post" action="{% url 'delete_upload_file' file.id %}"
