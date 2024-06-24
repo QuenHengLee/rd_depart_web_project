@@ -1,0 +1,85 @@
+.centered-heading {
+    text-align: center; /* 居中对齐 */
+    font-size: 3rem; /* 设置字体大小 */
+    margin-bottom: 2.5rem; /* 设置底部边距 */
+}
+
+.ncu-image {
+    display: block;
+    margin: 0 auto;
+    max-width: 50%; /* 使图像响应式 */
+}
+
+.sub-title {
+    list-style-type: none; /* 隱藏列表項標記 */
+    padding-left: 0; /* 移除內邊距 */
+    font-size: 1.5rem;
+    padding-left: 0%;
+    margin-bottom: 30px; /* 增加底部邊距 */
+}
+
+.child-title {
+    list-style-type: none; /* 隱藏列表項標記 */
+    padding-left: 0; /* 移除內邊距 */
+    font-size: 1.2rem;
+    padding-left: 0%;
+    margin-bottom: 30px; /* 增加底部邊距 */
+}
+
+
+.custom-modal-button {
+    background-color: #88a4b5; /* 绿色背景色 */
+    color: white; /* 白色文字 */
+    padding: 5px 10px; /* 内边距 */
+    border: none; /* 去掉边框 */
+    border-radius: 4px; /* 圆角 */
+    cursor: pointer; /* 鼠标指针样式 */
+    font-size: 0.875rem; /* 字体大小 */
+    transition: background-color 0.3s ease; /* 背景色过渡效果 */
+}
+
+.custom-modal-button:hover {
+    background-color: #218838; /* 鼠标悬停时的背景色 */
+}
+
+.custom-modal-button:focus {
+    outline: none; /* 去掉聚焦时的轮廓 */
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5); /* 聚焦时的阴影 */
+}
+
+.red-button {
+    background-color: rgb(239, 66, 66);
+    color: white;
+    border: none;
+    padding: 2px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.875rem;
+    margin: 0px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.red-button:hover {
+    background-color: darkred;
+}
+
+.modal-header {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.close {
+    font-size: 1.5rem;
+}

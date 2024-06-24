@@ -74,7 +74,12 @@ h1 {
     padding: 0;
 }
 
-.sub-title,
+
+.sub-title {
+    list-style-type: none; /* 隱藏列表項標記 */
+    padding-left: 0; /* 移除內邊距 */
+}
+
 .child-title {
     margin-bottom: 15px;
 }
