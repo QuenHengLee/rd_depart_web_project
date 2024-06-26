@@ -215,26 +215,21 @@
                                                         <input type="hidden" name="child_id" value="{{ child_title.id }}">
                                                         <div class="form-group">
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" type="radio" name="upload_option_edit_{{ file.id }}"
-                                                                    value="file" {% if file.file_name %}checked{% endif %}
-                                                                    onclick="toggleUploadOption(this, 'edit-{{ file.id }}')">
+                                                                <input class="form-check-input" type="radio" name="upload_option_edit_{{ file.id }}" value="file" {% if                                                                    file.file_name %}checked{% endif %} onclick="toggleEditOption(this, '{{ file.id }}')">
                                                                 <label class="form-check-label">上傳檔案</label>
                                                             </div>
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" type="radio" name="upload_option_edit_{{ file.id }}"
-                                                                    value="url" {% if file.url %}checked{% endif %}
-                                                                    onclick="toggleUploadOption(this, 'edit-{{ file.id }}')">
+                                                                <input class="form-check-input" type="radio" name="upload_option_edit_{{ file.id }}" value="url" {% if                                                                    file.url %}checked{% endif %} onclick="toggleEditOption(this, '{{ file.id }}')">
                                                                 <label class="form-check-label">提供網址</label>
                                                             </div>
                                                         </div>
-                                                        <div id="file-upload-edit-{{ file.id }}" class="form-group" {% if not file.file_name %}style="display:none;" {% endif                                                            %}>
+                                                        <div id="file-upload-edit-{{ file.id }}" class="form-group" {% if not file.file_name %}style="display:none;" {%                                                            endif %}>
                                                             <label for="id_file_name_{{ file.id }}">上傳檔案</label>
                                                             <input type="file" name="file_name" class="form-control" id="id_file_name_{{ file.id }}">
                                                             {% if file.file_name %}
                                                             <small>目前的檔案: {{ file.file_name.name }}</small>
                                                             {% endif %}
                                                         </div>
-
                                                         <div id="url-upload-edit-{{ file.id }}" class="form-group" {% if not file.url %}style="display:none;" {% endif %}>
                                                             <label for="id_url_{{ file.id }}">提供網址</label>
                                                             <input type="url" name="url" class="form-control" id="id_url_{{ file.id }}" value="{{ file.url }}">
