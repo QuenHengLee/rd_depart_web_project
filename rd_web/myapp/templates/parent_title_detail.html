@@ -227,21 +227,26 @@
                                                                 <label class="form-check-label">提供網址</label>
                                                             </div>
                                                         </div>
-                                                        <div id="file-upload-edit-{{ file.id }}" class="form-group" {% if not file.file_name                                                            %}style="display:none;" {% endif %}>
-                                                            <label>{{ form.file_name.label_tag }}</label>
-                                                            {{ form.file_name }}
+                                                        <div id="file-upload-edit-{{ file.id }}" class="form-group" {% if not file.file_name %}style="display:none;" {% endif                                                            %}>
+                                                            <label for="id_file_name_{{ file.id }}">上傳檔案</label>
+                                                            <input type="file" name="file_name" class="form-control" id="id_file_name_{{ file.id }}">
+                                                            {% if file.file_name %}
+                                                            <small>目前的檔案: {{ file.file_name.name }}</small>
+                                                            {% endif %}
                                                         </div>
-                                                        <div id="url-upload-edit-{{ file.id }}" class="form-group" {% if not file.url                                                            %}style="display:none;" {% endif %}>
-                                                            <label>{{ form.url.label_tag }}</label>
-                                                            {{ form.url }}
+
+                                                        <div id="url-upload-edit-{{ file.id }}" class="form-group" {% if not file.url %}style="display:none;" {% endif %}>
+                                                            <label for="id_url_{{ file.id }}">提供網址</label>
+                                                            <input type="url" name="url" class="form-control" id="id_url_{{ file.id }}" value="{{ file.url }}">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>{{ form.file_description.label_tag }}</label>
-                                                            {{ form.file_description }}
+                                                            <textarea name="file_description" class="form-control"
+                                                                id="id_file_description_{{ file.id }}">{{ file.file_description }}</textarea>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label>附錄編號</label>
-                                                            {{ form.key }}
+                                                            <label for="id_key_{{ file.id }}">附錄編號</label>
+                                                            <input type="text" name="key" class="form-control" id="id_key_{{ file.id }}" value="{{ file.key }}">
                                                         </div>
                                                         <!-- 顯示表單錯誤信息 -->
                                                         {% if form.non_field_errors %}
