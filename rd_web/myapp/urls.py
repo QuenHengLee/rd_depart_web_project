@@ -13,4 +13,8 @@ urlpatterns = [
     
     # 刪除上傳文件功能的URL模式，包含動態文件ID參數
     path('delete_upload_file/<int:file_id>/', views.delete_upload_file, name='delete_upload_file'),
+
+    # 編輯上傳文件功能的URL模式，包含動態文件ID參數
+    path('edit_upload_file/<int:file_id>/', views.edit_upload_file, name='edit_upload_file'),
+
 ]

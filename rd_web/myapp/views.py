@@ -4,6 +4,14 @@ from django.http import HttpResponseForbidden
 from .models import ParentTitle, UploadFileList, ChildTitle
 from .forms import UploadFileForm
 
+# 父標題列表視圖
+@login_required
+def parent_title_list(request):
+    # 獲取所有父標題列表
+    parent_titles = ParentTitle.objects.all()
+    # 渲染父標題列表頁面，並傳遞相關數據
+    return render(request, 'parent_title_list.html', {'parent_titles': parent_titles})
+
 # 父標題詳情視圖
 @login_required
 def parent_title_detail(request, parent_id):
@@ -58,10 +66,22 @@ def delete_upload_file(request, file_id):
     # 重新加載父標題詳情頁面
     return redirect('parent_title_detail', parent_id=parent_id)
 
-# 父標題列表視圖
+
+# 編輯上傳文件視圖
+
 @login_required
-def parent_title_list(request):
-    # 獲取所有父標題列表
-    parent_titles = ParentTitle.objects.all()
-    # 渲染父標題列表頁面，並傳遞相關數據
-    return render(request, 'parent_title_list.html', {'parent_titles': parent_titles})
+def edit_upload_file(request, file_id):
+    file = get_object_or_404(UploadFileList, id=file_id)
+    if file.uploaded_by != request.user and request.user.account_type != 'Admin':
+        return HttpResponseForbidden("您沒有權限編輯此文件。")
+
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES, instance=file)
+        if form.is_valid():
+            form.save()
+            parent_id = file.child.sub_title.parent_title.id
+            return redirect('parent_title_detail', parent_id=parent_id)
+    else:
+        form = UploadFileForm(instance=file)
+
+    return redirect('parent_title_detail', parent_id=file.child.sub_title.parent_title.id)
