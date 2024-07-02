@@ -20,10 +20,10 @@ class UploadFileForm(forms.ModelForm):
         url = cleaned_data.get('url')
 
         # 檢查是否同時填寫了file_name和url，如果是，則引發ValidationError
-        if file_name and url:
-            raise forms.ValidationError('只能選擇上傳檔案或提供網址，不能同時選擇。')
-        # 檢查是否file_name和url都未填寫，如果是，則引發ValidationError
-        if not file_name and not url:
-            raise forms.ValidationError('請選擇上傳檔案或提供網址。')
+        # if file_name and url:
+        #     raise forms.ValidationError('只能選擇上傳檔案或提供網址，不能同時選擇。')
+        # # 檢查是否file_name和url都未填寫，如果是，則引發ValidationError
+        # if not file_name and not url:
+        #     raise forms.ValidationError('請選擇上傳檔案或提供網址。')
         # 返回清理後的數據
         return cleaned_data

@@ -68,9 +68,9 @@ def delete_upload_file(request, file_id):
 
 
 # 編輯上傳文件視圖
-
 @login_required
 def edit_upload_file(request, file_id):
+    print("[HINT] Calling edit_upload_file from views.py")
     file = get_object_or_404(UploadFileList, id=file_id)
     if file.uploaded_by != request.user and request.user.account_type != 'Admin':
         return HttpResponseForbidden("您沒有權限編輯此文件。")
@@ -78,9 +78,23 @@ def edit_upload_file(request, file_id):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES, instance=file)
         if form.is_valid():
-            form.save()
+            print("[HINT] form is valid")
+            upload_option = request.POST.get(f'upload_option_edit_{file_id}')
+            print(f"[HINT] upload_option: {upload_option}")
+
+            # 根據選擇的上傳方式清理相應的字段
+            if upload_option == 'file':
+                file.url = None
+            elif upload_option == 'url':
+                file.file_name = None
+
+            file.save()
             parent_id = file.child.sub_title.parent_title.id
             return redirect('parent_title_detail', parent_id=parent_id)
+        else:
+            print("[HINT] form is not valid")
+            error_messages = form.errors.as_json()
+            print(error_messages.encode('utf-8').decode('unicode_escape'))
     else:
         form = UploadFileForm(instance=file)
 
