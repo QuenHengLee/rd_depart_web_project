@@ -14,6 +14,7 @@ def parent_title_list(request):
 
 # 父標題詳情視圖
 @login_required
+@login_required
 def parent_title_detail(request, parent_id):
     # 獲取特定父標題對象，如果不存在則返回404錯誤
     parent_title = get_object_or_404(ParentTitle, id=parent_id)
@@ -21,6 +22,13 @@ def parent_title_detail(request, parent_id):
     # 獲取所有父標題列表
     parent_titles = ParentTitle.objects.all()
     
+    # 獲取與 parent_title 相關的子標題及其上傳文件，並排序
+    child_titles = ChildTitle.objects.filter(sub_title__parent_title=parent_title).prefetch_related('uploadfiles')
+    
+    # 排序上傳文件
+    for child in child_titles:
+        child.uploadfiles_sorted = sorted(child.uploadfiles.all(), key=lambda file: [int(x) for x in file.key.split('.')])
+
     # 創建一個空的上傳文件表單實例
     form = UploadFileForm()
 
@@ -45,8 +53,11 @@ def parent_title_detail(request, parent_id):
     return render(request, 'parent_title_detail.html', {
         'parent_title': parent_title,
         'parent_titles': parent_titles,
+        'child_titles': child_titles,
         'form': form
     })
+
+
 
 # 刪除上傳文件視圖
 @login_required
