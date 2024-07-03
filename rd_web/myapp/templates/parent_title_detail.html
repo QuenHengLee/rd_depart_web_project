@@ -162,7 +162,7 @@
                                                         <div class="modal-footer">
                                                             <button type="submit" class="btn btn-primary">上傳</button>
                                                             <button type="button" class="btn btn-secondary"
-                                                                data-dismiss="modal">Cancel</button>
+                                                                data-dismiss="modal">取消</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -170,109 +170,129 @@
                                         </div>
                                     </div>
 
-                                <!-- 顯示上傳的檔案 -->
-                                <ul class="file-list">
-                                    {% for file in child_title.uploadfiles.all %}
-                                    <li>
-                                        [佐證編號: {{ file.key }}]
-                                        {% if file.file_name %}
-                                        <a href="{{ file.file_name.url }}" target="_blank">{{ file.file_description }}</a>
-                                        {% else %}
-                                        <a href="{{ file.url }}" target="_blank">{{ file.file_description }}</a>
-                                        {% endif %}
-                                        <span style="margin-left: 20px;">上傳人員: {{ file.uploaded_by.first_name }}</span>
-                                        <!-- 根據用戶類型顯示刪除按鈕和編輯按鈕 -->
-                                        {% if user.account_type == 'General' %}
-                                        {% if file.uploaded_by == user %}
-                                        <form method="post" action="{% url 'delete_upload_file' file.id %}" style="display:inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" class="red-button">刪除</button>
-                                        </form>
-                                        <button class="btn btn-primary" data-toggle="modal" data-target="#edit-modal-{{ file.id }}">編輯</button>
-                                        {% endif %}
-                                        {% elif user.account_type == 'Admin' %}
-                                        <form method="post" action="{% url 'delete_upload_file' file.id %}" style="display:inline;">
-                                            {% csrf_token %}
-                                            <button type="submit" class="red-button">刪除</button>
-                                        </form>
-                                        <button class="btn btn-primary" data-toggle="modal" data-target="#edit-modal-{{ file.id }}">編輯</button>
-                                        {% endif %}
-                                    </li>
-                                
-                                    <!-- 編輯上傳文件的表單對話框 -->
-                                    <div id="edit-modal-{{ file.id }}" class="modal">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">編輯檔案或網址</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="post" enctype="multipart/form-data" action="{% url 'edit_upload_file' file.id %}">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="child_id" value="{{ child_title.id }}">
-                                                        <div class="form-group">
-                                                            <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" type="radio" name="upload_option_edit_{{ file.id }}" value="file" {% if                                                                    file.file_name %}checked{% endif %} onclick="toggleEditOption(this, '{{ file.id }}')">
-                                                                <label class="form-check-label">上傳檔案</label>
+                                    <!-- 顯示上傳的檔案 -->
+                                    <ul class="file-list">
+                                        {% for file in child_title.uploadfiles.all|dictsort:"key" %}
+                                        <li>
+                                            [佐證編號: {{ file.key }}]
+                                            {% if file.file_name %}
+                                            <a href="{{ file.file_name.url }}" target="_blank">{{ file.file_description                                                }}</a>
+                                            {% else %}
+                                            <a href="{{ file.url }}" target="_blank">{{ file.file_description }}</a>
+                                            {% endif %}
+                                            <span style="margin-left: 20px;">上傳人員: {{ file.uploaded_by.first_name                                                }}</span>
+                                            <!-- 根據用戶類型顯示刪除按鈕和編輯按鈕 -->
+                                            {% if user.account_type == 'General' %}
+                                            {% if file.uploaded_by == user %}
+                                            <form method="post" action="{% url 'delete_upload_file' file.id %}"
+                                                style="display:inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="red-button">刪除</button>
+                                            </form>
+                                            <button class="btn btn-primary" data-toggle="modal"
+                                                data-target="#edit-modal-{{ file.id }}">編輯</button>
+                                            {% endif %}
+                                            {% elif user.account_type == 'Admin' %}
+                                            <form method="post" action="{% url 'delete_upload_file' file.id %}"
+                                                style="display:inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="red-button">刪除</button>
+                                            </form>
+                                            <button class="btn btn-primary" data-toggle="modal"
+                                                data-target="#edit-modal-{{ file.id }}">編輯</button>
+                                            {% endif %}
+                                        </li>
+                                        <!-- 編輯上傳文件的表單對話框 -->
+                                        <div id="edit-modal-{{ file.id }}" class="modal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">編輯檔案或網址</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form method="post" enctype="multipart/form-data"
+                                                            action="{% url 'edit_upload_file' file.id %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="child_id"
+                                                                value="{{ child_title.id }}">
+                                                            <div class="form-group">
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="upload_option_edit_{{ file.id }}"
+                                                                        value="file" {% if file.file_name %}checked{%                                                                        endif %}
+                                                                        onclick="toggleEditOption(this, '{{ file.id }}')">
+                                                                    <label class="form-check-label">上傳檔案</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="upload_option_edit_{{ file.id }}"
+                                                                        value="url" {% if file.url %}checked{% endif %}
+                                                                        onclick="toggleEditOption(this, '{{ file.id }}')">
+                                                                    <label class="form-check-label">提供網址</label>
+                                                                </div>
                                                             </div>
-                                                            <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" type="radio" name="upload_option_edit_{{ file.id }}" value="url" {% if                                                                    file.url %}checked{% endif %} onclick="toggleEditOption(this, '{{ file.id }}')">
-                                                                <label class="form-check-label">提供網址</label>
+                                                            <div id="file-upload-edit-{{ file.id }}" class="form-group"
+                                                                {% if not file.file_name %}style="display:none;"
+                                                                {%endif%}>
+                                                                <label for="id_file_name_{{ file.id }}">上傳檔案</label>
+                                                                <input type="file" name="file_name" class="form-control"
+                                                                    id="id_file_name_{{ file.id }}">
+                                                                {% if file.file_name %}
+                                                                <small>目前的檔案: {{ file.file_name.name }}</small>
+                                                                {% endif %}
                                                             </div>
-                                                        </div>
-                                                        <div id="file-upload-edit-{{ file.id }}" class="form-group" {% if not file.file_name %}style="display:none;" {%endif                                                            %}>
-                                                            <label for="id_file_name_{{ file.id }}">上傳檔案</label>
-                                                            <input type="file" name="file_name" class="form-control" id="id_file_name_{{ file.id }}">
-                                                            {% if file.file_name %}
-                                                            <small>目前的檔案: {{ file.file_name.name }}</small>
+                                                            <div id="url-upload-edit-{{ file.id }}" class="form-group"
+                                                                {% if not file.url %}style="display:none;" {% endif %}>
+                                                                <label for="id_url_{{ file.id }}">提供網址</label>
+                                                                <input type="url" name="url" class="form-control"
+                                                                    id="id_url_{{ file.id }}"
+                                                                    value="{{ file.url|default_if_none:'' }}">
+                                                                {% if file.url %}
+                                                                <small>目前的URL: {{ file.url }}</small>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>佐證描述</label>
+                                                                <textarea name="file_description" class="form-control"
+                                                                    id="id_file_description_{{ file.id }}">{{ file.file_description }}</textarea>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="id_key_{{ file.id }}">附錄編號</label>
+                                                                <input type="text" name="key" class="form-control"
+                                                                    id="id_key_{{ file.id }}" value="{{ file.key }}">
+                                                            </div>
+                                                            <!-- 顯示表單錯誤信息 -->
+                                                            {% if form.non_field_errors %}
+                                                            <div class="alert alert-danger">{{ form.non_field_errors }}
+                                                            </div>
                                                             {% endif %}
-                                                        </div>
-                                                        <div id="url-upload-edit-{{ file.id }}" class="form-group" {% if not file.url %}style="display:none;" {% endif %}>
-                                                            <label for="id_url_{{ file.id }}">提供網址</label>
-                                                            <input type="url" name="url" class="form-control" id="id_url_{{ file.id }}"
-                                                                value="{{ file.url|default_if_none:'' }}">
-                                                            {% if file.url %}
-                                                            <small>目前的URL: {{ file.url }}</small>
+                                                            {% if form.file_name.errors %}
+                                                            <div class="alert alert-danger">{{ form.file_name.errors }}
+                                                            </div>
                                                             {% endif %}
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>佐證描述</label>
-                                                            <textarea name="file_description" class="form-control"
-                                                                id="id_file_description_{{ file.id }}">{{ file.file_description }}</textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="id_key_{{ file.id }}">附錄編號</label>
-                                                            <input type="text" name="key" class="form-control" id="id_key_{{ file.id }}" value="{{ file.key }}">
-                                                        </div>
-                                                        <!-- 顯示表單錯誤信息 -->
-                                                        {% if form.non_field_errors %}
-                                                        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-                                                        {% endif %}
-                                                        {% if form.file_name.errors %}
-                                                        <div class="alert alert-danger">{{ form.file_name.errors }}</div>
-                                                        {% endif %}
-                                                        {% if form.url.errors %}
-                                                        <div class="alert alert-danger">{{ form.url.errors }}</div>
-                                                        {% endif %}
-                                                        {% if form.key.errors %}
-                                                        <div class="alert alert-danger">{{ form.key.errors }}</div>
-                                                        {% endif %}
-                                                        <div class="modal-footer">
-                                                            <button type="submit" class="btn btn-primary">保存</button>
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                                                        </div>
-                                                    </form>
-
+                                                            {% if form.url.errors %}
+                                                            <div class="alert alert-danger">{{ form.url.errors }}</div>
+                                                            {% endif %}
+                                                            {% if form.key.errors %}
+                                                            <div class="alert alert-danger">{{ form.key.errors }}</div>
+                                                            {% endif %}
+                                                            <div class="modal-footer">
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">保存</button>
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">取消</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    {% endfor %}
-                                </ul>
-
+                                        {% endfor %}
+                                    </ul>
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -284,10 +304,7 @@
         </div>
     </main>
 
-    <script src="{% static 'js/script.js' %}">
-
-
-    </script>
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 
 </html>
