@@ -4,7 +4,16 @@ from django.http import HttpResponseForbidden
 from .models import ParentTitle, UploadFileList, ChildTitle
 from .forms import UploadFileForm
 
+# 父標題列表視圖
+@login_required
+def parent_title_list(request):
+    # 獲取所有父標題列表
+    parent_titles = ParentTitle.objects.all()
+    # 渲染父標題列表頁面，並傳遞相關數據
+    return render(request, 'parent_title_list.html', {'parent_titles': parent_titles})
+
 # 父標題詳情視圖
+@login_required
 @login_required
 def parent_title_detail(request, parent_id):
     # 獲取特定父標題對象，如果不存在則返回404錯誤
@@ -13,6 +22,13 @@ def parent_title_detail(request, parent_id):
     # 獲取所有父標題列表
     parent_titles = ParentTitle.objects.all()
     
+    # 獲取與 parent_title 相關的子標題及其上傳文件，並排序
+    child_titles = ChildTitle.objects.filter(sub_title__parent_title=parent_title).prefetch_related('uploadfiles')
+    
+    # 排序上傳文件
+    for child in child_titles:
+        child.uploadfiles_sorted = sorted(child.uploadfiles.all(), key=lambda file: [int(x) for x in file.key.split('.')])
+
     # 創建一個空的上傳文件表單實例
     form = UploadFileForm()
 
@@ -37,8 +53,11 @@ def parent_title_detail(request, parent_id):
     return render(request, 'parent_title_detail.html', {
         'parent_title': parent_title,
         'parent_titles': parent_titles,
+        'child_titles': child_titles,
         'form': form
     })
+
+
 
 # 刪除上傳文件視圖
 @login_required
@@ -58,10 +77,36 @@ def delete_upload_file(request, file_id):
     # 重新加載父標題詳情頁面
     return redirect('parent_title_detail', parent_id=parent_id)
 
-# 父標題列表視圖
+
+# 編輯上傳文件視圖
 @login_required
-def parent_title_list(request):
-    # 獲取所有父標題列表
-    parent_titles = ParentTitle.objects.all()
-    # 渲染父標題列表頁面，並傳遞相關數據
-    return render(request, 'parent_title_list.html', {'parent_titles': parent_titles})
+def edit_upload_file(request, file_id):
+    print("[HINT] Calling edit_upload_file from views.py")
+    file = get_object_or_404(UploadFileList, id=file_id)
+    if file.uploaded_by != request.user and request.user.account_type != 'Admin':
+        return HttpResponseForbidden("您沒有權限編輯此文件。")
+
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES, instance=file)
+        if form.is_valid():
+            print("[HINT] form is valid")
+            upload_option = request.POST.get(f'upload_option_edit_{file_id}')
+            print(f"[HINT] upload_option: {upload_option}")
+
+            # 根據選擇的上傳方式清理相應的字段
+            if upload_option == 'file':
+                file.url = None
+            elif upload_option == 'url':
+                file.file_name = None
+
+            file.save()
+            parent_id = file.child.sub_title.parent_title.id
+            return redirect('parent_title_detail', parent_id=parent_id)
+        else:
+            print("[HINT] form is not valid")
+            error_messages = form.errors.as_json()
+            print(error_messages.encode('utf-8').decode('unicode_escape'))
+    else:
+        form = UploadFileForm(instance=file)
+
+    return redirect('parent_title_detail', parent_id=file.child.sub_title.parent_title.id)
