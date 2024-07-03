@@ -197,7 +197,7 @@
                                                     {% csrf_token %}
                                                     <button type="submit" class="red-button">刪除</button>
                                                 </form>
-                                                <button class="btn btn-primary" data-toggle="modal"
+                                                <button class="blue-button" data-toggle="modal"
                                                 data-target="#edit-modal-{{ file.id }}">編輯</button>
                                             {% endif %}
                                                 {% elif user.account_type == 'Admin' %}
@@ -205,7 +205,7 @@
                                                     {% csrf_token %}
                                                     <button type="submit" class="red-button">刪除</button>
                                                 </form>
-                                                <button class="btn btn-primary" data-toggle="modal"
+                                                <button class="blue-button" data-toggle="modal"
                                                 data-target="#edit-modal-{{ file.id }}">編輯</button>
                                             {% endif %}
                                             </li>
