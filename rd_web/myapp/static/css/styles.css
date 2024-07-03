@@ -65,6 +65,20 @@
     background-color: darkred;
 }
 
+.blue-button {
+    background-color: rgb(41, 32, 220);
+    color: white;
+    border: none;
+    padding: 2px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.875rem;
+    margin: 0px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
 .modal-header {
     border-bottom: 1px solid #dee2e6;
 }
